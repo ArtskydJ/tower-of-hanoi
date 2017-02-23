@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="uft-8">
+		<title>Tower Of Hanoi</title>
+		<style>
+			html, body {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+			}
+			body {
+				background-color: #ddd;
+				display: flex;
+			}
+			div {
+				position: absolute;
+			}
+			.column-1 { left: 18vw; }
+			.column-2 { left: 50vw; }
+			.column-3 { left: 82vw; }
+			.tower {
+				background-color: #222;
+				height: 85vh;
+				width: 2vw;
+				top: 10vh;
+			}
+			.base {
+				background-color: #222;
+				height: 5vh;
+				width: 100vw;
+				bottom: 0;
+				left: 0;
+			}
+			.disk {
+				height: 10vh;
+				border-radius: 5vh;
+			}
+			.disk-1 { width: 9vw;  margin-left: -3.5vw; background-color: #400; }
+			.disk-2 { width: 12vw; margin-left: -5vw; background-color: #040; }
+			.disk-3 { width: 15vw; margin-left: -6.5vw; background-color: #004; }
+			.disk-4 { width: 18vw; margin-left: -8vw; background-color: #a00; }
+			.disk-5 { width: 21vw; margin-left: -9.5vw; background-color: #0a0; }
+			.disk-6 { width: 24vw; margin-left: -11vw; background-color: #00a; }
+			.disk-7 { width: 27vw; margin-left: -12.5vw; background-color: #f00; }
+			.disk-8 { width: 30vw; margin-left: -14vw;background-color: #0f0; }
+			.stack-1 { top: 85vh; }
+			.stack-2 { top: 75vh; }
+			.stack-3 { top: 65vh; }
+			.stack-4 { top: 55vh; }
+			.stack-5 { top: 45vh; }
+			.stack-6 { top: 35vh; }
+			.stack-7 { top: 25vh; }
+			.stack-8 { top: 15vh; }
+		</style>
+	</head>
+	<body>
+		<div class="base"></div>
+		<div class="tower column-1"></div>
+		<div class="tower column-2"></div>
+		<div class="tower column-3"></div>
+		<div class="disk disk-1 column-1 stack-8"></div>
+		<div class="disk disk-2 column-1 stack-7"></div>
+		<div class="disk disk-3 column-1 stack-6"></div>
+		<div class="disk disk-4 column-1 stack-5"></div>
+		<div class="disk disk-5 column-1 stack-4"></div>
+		<div class="disk disk-6 column-1 stack-3"></div>
+		<div class="disk disk-7 column-1 stack-2"></div>
+		<div class="disk disk-8 column-1 stack-1"></div>
+
+		<canvas></canvas>
+
+		<script>
+		</script>
+	</body>
+</html>
