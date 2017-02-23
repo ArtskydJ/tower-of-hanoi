@@ -37,6 +37,9 @@
 			.disk {
 				height: 10vh;
 				border-radius: 5vh;
+				transition:
+					left 0.2s ease-in-out,
+					top 0.2s ease-in-out;
 			}
 			.disk-1 { width: 9vw;  margin-left: -3.5vw; background-color: #400; }
 			.disk-2 { width: 12vw; margin-left: -5vw; background-color: #040; }
@@ -54,6 +57,18 @@
 			.stack-6 { top: 35vh; }
 			.stack-7 { top: 25vh; }
 			.stack-8 { top: 15vh; }
+			.selected {
+				animation: pulse 1s infinite;
+			}
+
+			@keyframes pulse {
+				0%, 100% {
+					opacity: 1;
+				}
+				50% {
+					opacity: 0.8;
+				}
+			}
 		</style>
 	</head>
 	<body>
@@ -61,17 +76,114 @@
 		<div class="tower column-1"></div>
 		<div class="tower column-2"></div>
 		<div class="tower column-3"></div>
-		<div class="disk disk-1 column-1 stack-8"></div>
+		<!-- <div class="disk disk-1 column-1 stack-8"></div>
 		<div class="disk disk-2 column-1 stack-7"></div>
 		<div class="disk disk-3 column-1 stack-6"></div>
 		<div class="disk disk-4 column-1 stack-5"></div>
 		<div class="disk disk-5 column-1 stack-4"></div>
 		<div class="disk disk-6 column-1 stack-3"></div>
 		<div class="disk disk-7 column-1 stack-2"></div>
-		<div class="disk disk-8 column-1 stack-1"></div>
+		<div class="disk disk-8 column-1 stack-1"></div> -->
 
 		<script>
+			function makeDisks(n) {
+				for (var i = 0; i < n; i++) {
+					var div = document.createElement('div')
+					div.className = 'disk disk-' + (i + 1) + ' column-1 stack-' + (n - i)
+					document.body.appendChild(div)
+				}
+			}
+			makeDisks(8)
 
+			function moveDisk(sourceColumnNumber, targetColumnNumber) {
+				if (sourceColumnNumber === targetColumnNumber) return false
+
+				var disk = getTopDisk(sourceColumnNumber)
+				var diskToBeCovered = getTopDisk(targetColumnNumber)
+				if (!disk) {
+					console.log('no disk in requested source column')
+					return false
+				}
+				if (diskToBeCovered && getDiskNumber(disk) > getDiskNumber(diskToBeCovered)) {
+					console.log('move not allowed')
+					return false
+				}
+				var targetColumnHeight = getColumnStackHeight(targetColumnNumber)
+
+				disk.classList.remove('column-' + sourceColumnNumber)
+				disk.classList.add('column-' + targetColumnNumber)
+				disk.className = disk.className.replace(/stack-\d/, '')
+				disk.classList.add('stack-' + (targetColumnHeight + 1))
+			}
+
+			function getDisksByColumn(columnNumber) {
+				return Array.prototype.slice.call(document.querySelectorAll('.disk.column-' + columnNumber))
+			}
+
+			function getDiskStackPosition(disk) {
+				return Number(disk.className.replace(/.*stack-(\d).*/, '$1'))
+			}
+
+			function getDiskColumn(disk) {
+				return Number(disk.className.replace(/.*column-(\d).*/, '$1'))
+			}
+
+			function getDiskNumber(disk) {
+				return Number(disk.className.replace(/.*disk-(\d).*/, '$1'))
+			}
+
+			function getColumnStackHeight(columnNumber) {
+				var a = getDisksByColumn(columnNumber)
+					.map(getDiskStackPosition)
+					.reduce(function (memo, curr) { return Math.max(memo, curr) }, 0)
+				return a
+			}
+
+			function getTopDisk(columnNumber) {
+				/* I'm pretty sure this is horribly inefficient, but I'm tired */
+				var disks = getDisksByColumn(columnNumber)
+				var highestDisk = getColumnStackHeight(columnNumber)
+				return disks.find(function (disk) {
+					return getDiskStackPosition(disk) === highestDisk
+				})
+			}
+
+			function select(columnNumber) {
+				var disk = getTopDisk(columnNumber)
+				disk && disk.classList.add('selected')
+			}
+			function deselect(columnNumber) {
+				var disk = getTopDisk(columnNumber)
+				disk && disk.classList.remove('selected')
+			}
+
+			var srcCol = 0
+			document.onkeydown = function (ev) {
+				var col = { 37: 1, 40: 2, 39: 3 }[ev.keyCode]
+				if (!col) {
+					srcCol = 0
+				} else if (srcCol) {
+					deselect(srcCol)
+					moveDisk(srcCol, col)
+					srcCol = 0
+				} else {
+					srcCol = col
+					select(srcCol)
+				}
+			}
 		</script>
 	</body>
 </html>
+
+<!--
+TODO
+========
+Highlight selected piece (border?)
+Instructions at the top of the game?
+Put the error messages in the base
+Enable more controls? (123, on numpad, jkl on keyboard, maybe)
+Do something cool when you win
+Add controls so you can modify the number of disks you play with
+Try 4px border-radius on the disks, and decide if it is better
+
+-->
